@@ -88,7 +88,7 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
         T value = data.get(position);
         String name = dialogInterface.getDisplay(value);
         if (!muteCheck && position == select)
-            name = "√ " + name;
+            name = "➤" + name;
         ((TextView) holder.itemView.findViewById(R.id.tvName)).setText(name);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
