@@ -31,6 +31,7 @@
     <string name="det_fav_del">已取消收藏</string>
     <string name="det_fav_star">★ 收藏</string>
     <string name="det_fav_unstar">☆ 收藏</string>
+    <string name="det_url">播放地址已复制</string>
     <string name="det_source"></string>
     <string name="det_year">年份</string>
     <string name="det_area">地区</string>
@@ -53,6 +54,7 @@
     <string name="mn_play_decode">IJK解码</string>
     <string name="mn_search">搜索展示</string>
     <string name="mn_ratio">画面缩放</string>
+    <string name="mn_pip">画中画</string>
     <string name="mn_preview">窗口预览</string>
     <string name="mn_webview">嗅探Webview</string>
     <string name="mn_render">渲染方式</string>

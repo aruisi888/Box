@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 import android.app.PictureInPictureParams;
 import android.app.RemoteAction;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -119,6 +121,8 @@ public class DetailActivity extends BaseActivity {
     private static final int PIP_BOARDCAST_ACTION_PLAYPAUSE = 1;
     private static final int PIP_BOARDCAST_ACTION_NEXT = 2;
 
+    private ImageView tvPlayUrl;
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_detail;
@@ -153,6 +157,7 @@ public class DetailActivity extends BaseActivity {
         tvSort = findViewById(R.id.tvSort);
         tvCollect = findViewById(R.id.tvCollect);
         tvQuickSearch = findViewById(R.id.tvQuickSearch);
+        tvPlayUrl = findViewById(R.id.tvPlayUrl);
         mEmptyPlayList = findViewById(R.id.mEmptyPlaylist);
         mGridView = findViewById(R.id.mGridView);
         mGridView.setHasFixedSize(true);
@@ -259,6 +264,16 @@ public class DetailActivity extends BaseActivity {
                     Toast.makeText(DetailActivity.this, getString(R.string.det_fav_del), Toast.LENGTH_SHORT).show();
                     tvCollect.setText(getString(R.string.det_fav_unstar));
                 }
+            }
+        });
+        tvPlayUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //获取剪切板管理器
+                ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                //设置内容到剪切板
+                cm.setPrimaryClip(ClipData.newPlainText(null, vodInfo.seriesMap.get(vodInfo.playFlag).get(0).url));
+                Toast.makeText(DetailActivity.this, getString(R.string.det_url), Toast.LENGTH_SHORT).show();
             }
         });
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
@@ -562,18 +577,18 @@ public class DetailActivity extends BaseActivity {
             if (event.obj != null) {
                 if (event.obj instanceof Integer) {
                     int index = (int) event.obj;
-                    // if (index != vodInfo.playIndex) {
-                    seriesAdapter.getData().get(vodInfo.playIndex).selected = false;
-                    seriesAdapter.notifyItemChanged(vodInfo.playIndex);
-                    seriesAdapter.getData().get(index).selected = true;
-                    seriesAdapter.notifyItemChanged(index);
-                    mGridView.setSelection(index);
-                    vodInfo.playIndex = index;
-                    //保存历史
-                    insertVod(sourceKey, vodInfo);
-                    // }
+                    if (index != vodInfo.playIndex) {
+                        seriesAdapter.getData().get(vodInfo.playIndex).selected = false;
+                        seriesAdapter.notifyItemChanged(vodInfo.playIndex);
+                        seriesAdapter.getData().get(index).selected = true;
+                        seriesAdapter.notifyItemChanged(index);
+                        mGridView.setSelection(index);
+                        vodInfo.playIndex = index;
+                        //保存历史
+                        insertVod(sourceKey, vodInfo);
+                    }
                 } else if (event.obj instanceof JSONObject) {
-                    vodInfo.playerCfg = ((JSONObject) event.obj).toString();
+                    vodInfo.playerCfg = event.obj.toString();
                     //保存历史
                     insertVod(sourceKey, vodInfo);
                 }
@@ -600,8 +615,8 @@ public class DetailActivity extends BaseActivity {
 
     private String searchTitle = "";
     private boolean hadQuickStart = false;
-    private List<Movie.Video> quickSearchData = new ArrayList<>();
-    private List<String> quickSearchWord = new ArrayList<>();
+    private final List<Movie.Video> quickSearchData = new ArrayList<>();
+    private final List<String> quickSearchWord = new ArrayList<>();
     private ExecutorService searchExecutorService = null;
 
     private void switchSearchWord(String word) {
@@ -731,10 +746,12 @@ public class DetailActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    boolean PIP = Hawk.get(HawkConfig.PIC_IN_PIC, false);
+
     @Override
     public void onUserLeaveHint() {
         // takagen99 : Additional check for external player
-        if (supportsPiPMode() && showPreview && !playFragment.extPlay) {
+        if (supportsPiPMode() && showPreview && !playFragment.extPlay && PIP) {
             List<RemoteAction> actions = new ArrayList<>();
             actions.add(generateRemoteAction(android.R.drawable.ic_media_previous, PIP_BOARDCAST_ACTION_PREV, "Prev", "Play Previous"));
             actions.add(generateRemoteAction(android.R.drawable.ic_media_play, PIP_BOARDCAST_ACTION_PLAYPAUSE, "Play", "Play/Pause"));

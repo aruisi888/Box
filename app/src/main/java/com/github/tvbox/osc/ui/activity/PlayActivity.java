@@ -271,7 +271,9 @@ public class PlayActivity extends BaseActivity {
 
                     @Override
                     public String getDisplay(TrackInfoBean val) {
-                        return val.index + " : " + val.language;
+//                        return val.index + " : " + val.language;
+                        String str = val.name.substring(val.name.substring(0, val.name.indexOf(",")).length() + 1).trim();
+                        return val.index + " : " + str;
                     }
                 }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                     @Override
@@ -480,10 +482,11 @@ public class PlayActivity extends BaseActivity {
 
     // takagen99 : Add check for external players not enter PIP
     private boolean extPlay = false;
+    boolean PIP = Hawk.get(HawkConfig.PIC_IN_PIC, false);
 
     @Override
     public void onUserLeaveHint() {
-        if (supportsPiPMode() && !extPlay) {
+        if (supportsPiPMode() && !extPlay && PIP) {
             List<RemoteAction> actions = new ArrayList<>();
             actions.add(generateRemoteAction(android.R.drawable.ic_media_previous, PIP_BOARDCAST_ACTION_PREV, "Prev", "Play Previous"));
             actions.add(generateRemoteAction(android.R.drawable.ic_media_play, PIP_BOARDCAST_ACTION_PLAYPAUSE, "Play/Pause", "Play or Pause"));
@@ -1007,7 +1010,7 @@ public class PlayActivity extends BaseActivity {
     private XWalkWebClient mX5WebClient;
     private WebView mSysWebView;
     private SysWebClient mSysWebClient;
-    private Map<String, Boolean> loadedUrls = new HashMap<>();
+    private final Map<String, Boolean> loadedUrls = new HashMap<>();
     private boolean loadFound = false;
 
     void loadWebView(String url) {

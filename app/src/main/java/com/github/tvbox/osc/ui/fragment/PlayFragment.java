@@ -254,7 +254,9 @@ public class PlayFragment extends BaseLazyFragment {
 
                     @Override
                     public String getDisplay(TrackInfoBean val) {
-                        return val.index + " : " + val.language;
+//                        return val.index + " : " + val.language;
+                        String str = val.name.substring(val.name.substring(0, val.name.indexOf(",")).length() + 1).trim();
+                        return val.index + " : " + str;
                     }
                 }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                     @Override
@@ -466,17 +468,12 @@ public class PlayFragment extends BaseLazyFragment {
     }
 
     public boolean onBackPressed() {
-        if (mController.onBackPressed()) {
-            return true;
-        }
-        return false;
+        return mController.onBackPressed();
     }
 
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event != null) {
-            if (mController.onKeyEvent(event)) {
-                return true;
-            }
+            return mController.onKeyEvent(event);
         }
         return false;
     }
@@ -896,7 +893,7 @@ public class PlayFragment extends BaseLazyFragment {
     private XWalkWebClient mX5WebClient;
     private WebView mSysWebView;
     private SysWebClient mSysWebClient;
-    private Map<String, Boolean> loadedUrls = new HashMap<>();
+    private final Map<String, Boolean> loadedUrls = new HashMap<>();
     private boolean loadFound = false;
 
     void loadWebView(String url) {

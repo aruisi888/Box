@@ -31,6 +31,7 @@
     <string name="det_fav_del">Removed from Favorite</string>
     <string name="det_fav_star">★ Favorite</string>
     <string name="det_fav_unstar">☆ Favorite</string>
+    <string name="det_url">Play URL Copied</string>
     <string name="det_source"></string>
     <string name="det_year">Year</string>
     <string name="det_area">Area</string>
@@ -53,6 +54,7 @@
     <string name="mn_play_decode">Decode</string>
     <string name="mn_search">Search Display</string>
     <string name="mn_ratio">Screen Ratio</string>
+    <string name="mn_pip">PIP</string>
     <string name="mn_preview">Preview Window</string>
     <string name="mn_webview">WebView</string>
     <string name="mn_render">Render</string>
